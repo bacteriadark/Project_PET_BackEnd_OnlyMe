@@ -6,9 +6,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import project_pet_backEnd.groomer.appointment.vo.PetGroomerAppointment;
 import project_pet_backEnd.groomer.petgroomerschedule.dao.PetGroomerScheduleDao;
 import project_pet_backEnd.groomer.petgroomerschedule.dto.PGScheduleQueryParameter;
-import project_pet_backEnd.groomer.petgroomerschedule.dto.PgScheduleSearchList;
+import project_pet_backEnd.groomer.petgroomerschedule.dto.PGScheduleSearchList;
 import project_pet_backEnd.groomer.petgroomerschedule.vo.PetGroomerSchedule;
 
 import java.sql.Date;
@@ -53,16 +54,16 @@ public class PetGroomerScheduleDaoImp implements PetGroomerScheduleDao {
     }
 
     @Override
-    public List<PgScheduleSearchList> getAllPgScheduleByPgId() {
+    public List<PGScheduleSearchList> getAllPgScheduleByPgId() {
         String sql = "SELECT pgs.PGS_ID, pgs.PG_ID, pgs.PGS_DATE, pgs.PGS_STATE, pg.PG_NAME " +
                 "FROM PET_GROOMER_SCHEDULE pgs " +
                 "JOIN PET_GROOMER pg ON pgs.PG_ID = pg.PG_ID ";
         Map<String, Object> map = new HashMap<>();
 
-        List<PgScheduleSearchList> pgScheduleSearchListList = namedParameterJdbcTemplate.query(sql, map, new RowMapper<PgScheduleSearchList>() {
+        List<PGScheduleSearchList> pgScheduleSearchListList = namedParameterJdbcTemplate.query(sql, map, new RowMapper<PGScheduleSearchList>() {
             @Override
-            public PgScheduleSearchList mapRow(ResultSet rs, int rowNum) throws SQLException {
-                PgScheduleSearchList pgScheduleSearchList = new PgScheduleSearchList();
+            public PGScheduleSearchList mapRow(ResultSet rs, int rowNum) throws SQLException {
+                PGScheduleSearchList pgScheduleSearchList = new PGScheduleSearchList();
                 pgScheduleSearchList.setPgsId(rs.getInt("PGS_ID"));
                 pgScheduleSearchList.setPgId(rs.getInt("PG_ID"));
                 pgScheduleSearchList.setPgsDate(rs.getDate("PGS_DATE"));
@@ -75,7 +76,7 @@ public class PetGroomerScheduleDaoImp implements PetGroomerScheduleDao {
     }
 
     @Override
-    public List<PgScheduleSearchList> getAllPgScheduleWithSearch(PGScheduleQueryParameter pgScheduleQueryParameter) {
+    public List<PGScheduleSearchList> getAllPgScheduleWithSearch(PGScheduleQueryParameter pgScheduleQueryParameter) {
         String sql = "SELECT pgs.PGS_ID, pgs.PG_ID, pgs.PGS_DATE, pgs.PGS_STATE, pg.PG_NAME " +
                 "FROM PET_GROOMER_SCHEDULE pgs " +
                 "JOIN PET_GROOMER pg ON pgs.PG_ID = pg.PG_ID " +
@@ -117,10 +118,10 @@ public class PetGroomerScheduleDaoImp implements PetGroomerScheduleDao {
         map.put("limit", pgScheduleQueryParameter.getLimit());
         map.put("offset", pgScheduleQueryParameter.getOffset());
 
-        List<PgScheduleSearchList> petGroomerSchedulesList = namedParameterJdbcTemplate.query(sql, map, new RowMapper<PgScheduleSearchList>() {
+        List<PGScheduleSearchList> petGroomerSchedulesList = namedParameterJdbcTemplate.query(sql, map, new RowMapper<PGScheduleSearchList>() {
             @Override
-            public PgScheduleSearchList mapRow(ResultSet rs, int rowNum) throws SQLException {
-                PgScheduleSearchList pgScheduleSearchList = new PgScheduleSearchList();
+            public PGScheduleSearchList mapRow(ResultSet rs, int rowNum) throws SQLException {
+                PGScheduleSearchList pgScheduleSearchList = new PGScheduleSearchList();
                 pgScheduleSearchList.setPgsId(rs.getInt("PGS_ID"));
                 pgScheduleSearchList.setPgId(rs.getInt("PG_ID"));
                 pgScheduleSearchList.setPgsDate(rs.getDate("PGS_DATE"));
@@ -193,7 +194,5 @@ public class PetGroomerScheduleDaoImp implements PetGroomerScheduleDao {
         }
         return null;
     }
-
-
 
 }

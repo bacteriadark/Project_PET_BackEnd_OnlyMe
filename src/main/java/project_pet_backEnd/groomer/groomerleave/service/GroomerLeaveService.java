@@ -2,8 +2,7 @@ package project_pet_backEnd.groomer.groomerleave.service;
 
 import project_pet_backEnd.groomer.groomerleave.dto.request.ChangeLeaveReq;
 import project_pet_backEnd.groomer.groomerleave.dto.request.InsertLeaveReq;
-import project_pet_backEnd.groomer.groomerleave.dto.response.LeaveAllRes;
-import project_pet_backEnd.groomer.groomerleave.vo.GroomerLeave;
+import project_pet_backEnd.groomer.groomerleave.dto.LeaveAllRes;
 import project_pet_backEnd.utils.commonDto.ResultResponse;
 
 import java.util.List;

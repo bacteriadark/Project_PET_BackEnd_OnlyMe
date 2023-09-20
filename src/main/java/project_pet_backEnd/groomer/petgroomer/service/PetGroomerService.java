@@ -1,11 +1,11 @@
 package project_pet_backEnd.groomer.petgroomer.service;
 
-import org.springframework.data.relational.core.sql.In;
 import project_pet_backEnd.groomer.petgroomer.dto.PGQueryParameter;
 import project_pet_backEnd.groomer.petgroomer.dto.request.PGInsertReq;
 import project_pet_backEnd.groomer.petgroomer.dto.request.GetAllGroomerListReq;
-import project_pet_backEnd.groomer.petgroomer.dto.response.*;
-import project_pet_backEnd.utils.commonDto.ResultResponse;
+import project_pet_backEnd.groomer.petgroomer.dto.response.GetAllGroomerListSortRes;
+import project_pet_backEnd.groomer.petgroomer.dto.response.GetAllGroomerListSortResForUser;
+import project_pet_backEnd.user.dto.ResultResponse;
 import project_pet_backEnd.utils.commonDto.Page;
 
 import java.util.List;
@@ -14,11 +14,11 @@ public interface PetGroomerService {
     /**
      * get管理員權限為美容師個人管理 的 管理員List 。給新增美容師使用 for 管理員
      */
-    ResultResponse<List<ManagerGetByFunctionIdRes>> getManagerByFunctionId(Integer functionId);
+    ResultResponse getManagerByFunctionId(Integer functionId);
     /**
      * 新增美容師 for 管理員
      */
-    ResultResponse<String> insertGroomer(PGInsertReq pgInsertReq);
+    ResultResponse insertGroomer(PGInsertReq pgInsertReq);
 
     /**
      * 取得美容師列表 for 管理員
@@ -31,11 +31,15 @@ public interface PetGroomerService {
     /**
      * 修改美容師資料 by Id for 管理員
      */
-    ResultResponse<String> updateGroomerByIdForMan(GetAllGroomerListReq getAllGroomerListReq);
+    ResultResponse updateGroomerByIdForMan(GetAllGroomerListReq getAllGroomerListReq);
+    /**
+     * 取得美容師列表 By PgName for 管理員
+     */
 
-    ResultResponse<GetAllGroomerListSortRes> getPgInfoByManIdForPg(Integer manId);
+//    ResultResponse getGroomerByPgNameForMan(String PgName);
 
-    ResultResponse<List<PortfolioRes>> getPortfolioByPgId(Integer pgId);
-
-    ResultResponse<List<PictureInfoRes>> getPicByPorId(Integer porId);
+    /**
+     * 取得美容師列表 By PgName for User
+     */
+//    ResultResponse getGroomerByPgNameForUser (String PgName);
 }

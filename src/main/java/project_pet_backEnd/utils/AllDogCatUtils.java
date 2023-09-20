@@ -89,9 +89,14 @@ public class AllDogCatUtils {
      * 日期轉換格式 java.util.date-> yyyy-MM-dd
      * */
     public  static String timestampToDateFormat(Date date){
+        if(date == null){
+            date = new Date();
+        }
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String formattedDate = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return formattedDate;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
     }
     /**
      * 日期轉換格式 java.sql.Date-> java.lang.String yyyy-MM-dd

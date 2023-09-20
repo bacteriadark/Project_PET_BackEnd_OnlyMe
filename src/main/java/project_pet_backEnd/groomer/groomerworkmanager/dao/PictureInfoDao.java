@@ -9,25 +9,25 @@ public interface PictureInfoDao {
 
 
     /**
-     * 新增作品圖片
+     * 新增作品图片
      * @param rest
      */
     void insert(PictureInfo rest);
 
     /**
-     * 修改作品圖片
+     * 修改作品图片
      * @param rest
      */
     void update(PictureInfo rest);
 
     /**
-     * 删除作品圖片
+     * 删除作品图片
      * @param rest
      */
     void delete(PictureInfo rest);
 
     /**
-     * 查询作品圖片
+     * 查询作品图片
      * @param rest
      * @return
      */
@@ -35,14 +35,16 @@ public interface PictureInfoDao {
 
 
     /**
-     * 作品圖片列表
+     * 作品图片列表
      * @param PGQueryParameter
      * @return
      */
     List<PictureInfo> list(PGQueryParameter PGQueryParameter);
 
+    List<PictureInfo> getAllPicture();
+
     /**
-     * 統計數量
+     * 统计数量
      * @param PGQueryParameter
      * @return
      */

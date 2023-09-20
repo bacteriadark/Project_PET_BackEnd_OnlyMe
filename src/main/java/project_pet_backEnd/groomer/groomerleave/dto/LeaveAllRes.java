@@ -1,4 +1,4 @@
-package project_pet_backEnd.groomer.groomerleave.dto.response;
+package project_pet_backEnd.groomer.groomerleave.dto;
 
 import lombok.Data;
 

@@ -7,7 +7,6 @@ import project_pet_backEnd.groomer.appointment.dto.response.PGAppointmentRes;
 import project_pet_backEnd.groomer.appointment.dto.response.UserPhAndNameRes;
 import project_pet_backEnd.groomer.appointment.vo.PetGroomerAppointment;
 
-import java.sql.Date;
 import java.util.List;
 
 public interface GroomerAppointmentDao {
@@ -42,10 +41,6 @@ public interface GroomerAppointmentDao {
      */
     public List<PGAppointmentRes> getAllAppointmentWithSearch(GroomerAppointmentQueryParameter groomerAppointmentQueryParameter);
 
-
-    //計算搜尋預約單總筆數
-    public Integer countAllAppointmentWithSearch(GroomerAppointmentQueryParameter groomerAppointmentQueryParameter);
-
     /*
      * 根據寵物美容師編號獲取該美容師的預約記錄
      * @param pgId 寵物美容師編號
@@ -68,12 +63,5 @@ public interface GroomerAppointmentDao {
      *查詢使用者所有預約單數量ByUserId 方便計算頁數。
      */
     public Integer countAppointmentByUserId(Integer userId);
-    /*
-     *修改預約單使用。查詢單一筆預約單返回。
-     */
-    public PetGroomerAppointment getAppointmentByPgaNo(Integer pgaNo);
-    /*
-     *供修改班表使用。
-     */
-    List<PetGroomerAppointment> getAppointmentByPgIdAndDate(Integer pgId, Date date);
+
 }

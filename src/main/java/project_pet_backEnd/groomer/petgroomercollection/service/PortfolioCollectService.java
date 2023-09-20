@@ -2,7 +2,6 @@ package project_pet_backEnd.groomer.petgroomercollection.service;
 
 import project_pet_backEnd.groomer.petgroomer.dto.PGQueryParameter;
 import project_pet_backEnd.groomer.petgroomer.dto.response.PortfolioCollectRes;
-import project_pet_backEnd.groomer.petgroomer.dto.response.PortfolioRes;
 import project_pet_backEnd.groomer.petgroomercollection.vo.PortfolioCollect;
 import project_pet_backEnd.utils.commonDto.Page;
 import project_pet_backEnd.utils.commonDto.ResultResponse;

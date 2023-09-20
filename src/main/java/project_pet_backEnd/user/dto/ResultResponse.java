@@ -1,4 +1,4 @@
-package project_pet_backEnd.utils.commonDto;
+package project_pet_backEnd.user.dto;
 
 import lombok.Data;
 

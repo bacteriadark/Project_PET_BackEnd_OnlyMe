@@ -26,7 +26,7 @@ public interface PortfolioCollectDao {
     void delete(PortfolioCollect rest);
 
     /**
-     * 查詢詳情
+     * 查询详情
      * @param rest
      * @return
      */
@@ -40,7 +40,7 @@ public interface PortfolioCollectDao {
     List<PortfolioCollect> list(PGQueryParameter PGQueryParameter);
 
     /**
-     * 統計數量
+     * 统计数量
      * @param PGQueryParameter
      * @return
      */

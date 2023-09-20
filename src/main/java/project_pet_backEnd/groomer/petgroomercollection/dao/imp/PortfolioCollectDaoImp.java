@@ -1,4 +1,4 @@
-package project_pet_backEnd.groomer.petgroomercollection.dao.impl;
+package project_pet_backEnd.groomer.petgroomercollection.dao.imp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -55,9 +55,10 @@ public class PortfolioCollectDaoImp implements PortfolioCollectDao {
 
     @Override
     public void delete(PortfolioCollect rest) {
-        String sql = "DELETE FROM PORTFOLIO_COLLECT WHERE PC_NO = :pcNo";
+        String sql = "DELETE FROM PORTFOLIO_COLLECT WHERE USER_ID = :userId and POR_ID = :porId";
         Map<String, Object> map = new HashMap<>();
-        map.put("pcNo", rest.getPcNo());
+        map.put("userId", rest.getUserId());
+        map.put("porId", rest.getPorId());
         namedParameterJdbcTemplate.update(sql, map);
     }
 
@@ -88,12 +89,16 @@ public class PortfolioCollectDaoImp implements PortfolioCollectDao {
 
     @Override
     public List<PortfolioCollect> list(PGQueryParameter PGQueryParameter) {
-        String sql = "select PC_NO, USER_ID, POR_ID, PC_CREATED from PORTFOLIO_COLLECT ";
+        String sql = "select c.PC_NO, c.USER_ID, c.POR_ID, c.PC_CREATED from PORTFOLIO_COLLECT c join PORTFOLIO p on c.POR_ID = p.POR_ID ";
         Map<String, Object> map = new HashMap<>();
-        sql += "WHERE 1 = 1 ";
+        sql += " WHERE 1 = 1 ";
         if (PGQueryParameter.getUserId() != null) {
-            sql += " AND USER_ID = :userId ";
+            sql += " AND c.USER_ID = :userId ";
             map.put("userId", PGQueryParameter.getUserId());
+        }
+        if (PGQueryParameter.getSearch() != null) {
+            sql += " AND p.POR_TITLE LIKE :search ";
+            map.put("search", "%" + PGQueryParameter.getSearch() + "%");
         }
         // Limit and Offset
         sql += "LIMIT :limit OFFSET :offset ";
@@ -116,13 +121,16 @@ public class PortfolioCollectDaoImp implements PortfolioCollectDao {
 
     @Override
     public Integer count(PGQueryParameter PGQueryParameter) {
-        String sql = "SELECT COUNT(*) AS total_count " +
-                "FROM PORTFOLIO_COLLECT ";
+        String sql = "select COUNT(*) AS total_count from PORTFOLIO_COLLECT c join PORTFOLIO p on c.POR_ID = p.POR_ID ";
         Map<String, Object> map = new HashMap<>();
         sql += "WHERE 1 = 1 ";
         if (PGQueryParameter.getUserId() != null) {
-            sql += " AND USER_ID = :userId ";
+            sql += " AND c.USER_ID = :userId ";
             map.put("userId", PGQueryParameter.getUserId());
+        }
+        if (PGQueryParameter.getSearch() != null) {
+            sql += " AND p.POR_TITLE LIKE :search ";
+            map.put("search", "%" + PGQueryParameter.getSearch() + "%");
         }
         Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, new RowMapper<Integer>() {
             @Override
@@ -133,3 +141,4 @@ public class PortfolioCollectDaoImp implements PortfolioCollectDao {
         return total;
     }
 }
+

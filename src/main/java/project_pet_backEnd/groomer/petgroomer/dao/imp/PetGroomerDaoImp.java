@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import project_pet_backEnd.groomer.petgroomer.dao.PetGroomerDao;
 import project_pet_backEnd.groomer.petgroomer.dto.GetAllGroomers;
 import project_pet_backEnd.groomer.petgroomer.dto.PGQueryParameter;
-import project_pet_backEnd.groomer.petgroomer.dto.response.GetAllGroomerListSortRes;
 import project_pet_backEnd.groomer.petgroomer.dto.response.GetAllGroomerListSortResForUser;
 import project_pet_backEnd.groomer.petgroomer.dto.response.ManagerGetByFunctionIdRes;
 import project_pet_backEnd.groomer.petgroomer.vo.PetGroomer;
@@ -112,7 +111,7 @@ public class PetGroomerDaoImp implements PetGroomerDao {
         Map<String, Object> map = new HashMap<>();
 
         if (PGQueryParameter.getSearch() != null) {
-            sql += "AND (PG_NAME LIKE :search OR MAN_ID LIKE :search OR pet_groomer.PG_ID LIKE :search OR pet_groomer.PG_ADDRESS LIKE :search) ";
+            sql += "AND (PG_NAME LIKE :search OR MAN_ID LIKE :search OR pet_groomer.PG_ID LIKE :search) ";
             map.put("search", "%" + PGQueryParameter.getSearch() + "%");
         }
 
@@ -128,12 +127,6 @@ public class PetGroomerDaoImp implements PetGroomerDao {
                     break;
                 case PG_NAME:
                     orderBy = "PG_NAME";
-                    break;
-                case MAN_ID:
-                    orderBy = "MAN_ID";
-                    break;
-                case PG_ID:
-                    orderBy = "PG_ID";
                     break;
                 default:
                     orderBy = "PG_ID"; // Default sorting by PG_ID
@@ -181,7 +174,7 @@ public class PetGroomerDaoImp implements PetGroomerDao {
 
         String sql = "select PG_ID, MAN_ID, PG_NAME, PG_GENDER, PG_PIC, PG_EMAIL, PG_PH, PG_ADDRESS, PG_BIRTHDAY from pet_groomer\n" +
                 "join manager on pet_groomer.MAN_ID = manager.manager_id\n" +
-                "where pet_groomer.MAN_ID = :manId and `manager`.manager_STATE = 1";
+                "where MAN_ID = :manId and MANAG ER_STATE = 1";
         Map map = new HashMap<>();
         map.put("manId",manId);
         List<PetGroomer> petGroomerList = namedParameterJdbcTemplate.query(sql, map, new RowMapper<PetGroomer>() {
@@ -288,37 +281,5 @@ public class PetGroomerDaoImp implements PetGroomerDao {
         return  total;
     }
 
-    @Override
-    public GetAllGroomers getGroomerByManId(Integer manId) {
-        String sql = "SELECT pet_groomer.PG_ID, MAN_ID, PG_NAME, PG_GENDER, PG_PIC, PG_EMAIL, PG_PH, PG_ADDRESS, PG_BIRTHDAY, COUNT(pet_groomer_appointment.PGA_NO) AS NUM_APPOINTMENTS\n" +
-                "FROM pet_groomer\n" +
-                "LEFT JOIN pet_groomer_appointment ON pet_groomer.PG_ID = pet_groomer_appointment.PG_ID\n" +
-                "WHERE MAN_ID = :manId " +
-                "GROUP BY pet_groomer.PG_ID, MAN_ID, PG_NAME, PG_GENDER, PG_PIC, PG_EMAIL, PG_PH, PG_ADDRESS, PG_BIRTHDAY\n";
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("manId", manId);
-        List<GetAllGroomers> petGroomerList = namedParameterJdbcTemplate.query(sql, map, new RowMapper<GetAllGroomers>() {
-            @Override
-            public GetAllGroomers mapRow(ResultSet rs, int rowNum) throws SQLException {
-                GetAllGroomers petGroomer =  new GetAllGroomers();
-                petGroomer.setPgId(rs.getInt("PG_ID"));
-                petGroomer.setManId(rs.getInt("MAN_ID"));
-                petGroomer.setPgName(rs.getString("PG_NAME"));
-                petGroomer.setPgGender(rs.getInt("PG_GENDER"));
-                petGroomer.setPgPic(rs.getBytes("PG_PIC"));
-                petGroomer.setPgEmail(rs.getString("PG_EMAIL"));
-                petGroomer.setPgPh(rs.getString("PG_PH"));
-                petGroomer.setPgAddress(rs.getString("PG_ADDRESS"));
-                petGroomer.setPgBirthday(rs.getDate("PG_BIRTHDAY"));
-                petGroomer.setNumAppointments(rs.getInt("NUM_APPOINTMENTS"));
-                return petGroomer;
-            }
-        });
-        if(petGroomerList.size()>0){
-            return petGroomerList.get(0);
-        }
-        return null;
-    }
 }
 

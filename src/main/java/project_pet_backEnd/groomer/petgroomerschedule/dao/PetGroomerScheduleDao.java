@@ -1,7 +1,8 @@
 package project_pet_backEnd.groomer.petgroomerschedule.dao;
 
+import project_pet_backEnd.groomer.appointment.vo.PetGroomerAppointment;
 import project_pet_backEnd.groomer.petgroomerschedule.dto.PGScheduleQueryParameter;
-import project_pet_backEnd.groomer.petgroomerschedule.dto.PgScheduleSearchList;
+import project_pet_backEnd.groomer.petgroomerschedule.dto.PGScheduleSearchList;
 import project_pet_backEnd.groomer.petgroomerschedule.vo.PetGroomerSchedule;
 
 import java.sql.Date;
@@ -24,14 +25,14 @@ public interface PetGroomerScheduleDao {
      * 獲取所有美容師班表信息
      * @return 所有美容師班表的列表
      */
-    public List<PgScheduleSearchList> getAllPgScheduleByPgId();
+    public List<PGScheduleSearchList> getAllPgScheduleByPgId();
 
     /**
      * 根據條件獲取美容師班表信息
      * @param pgScheduleQueryParameter 查詢條件可以包含搜索關鍵字(PG_ID PGS_DATE)、排序方式、分頁等信息
      * @return 符合條件的美容師班表的列表
      */
-    public List<PgScheduleSearchList>  getAllPgScheduleWithSearch(PGScheduleQueryParameter pgScheduleQueryParameter);
+    public List<PGScheduleSearchList>  getAllPgScheduleWithSearch(PGScheduleQueryParameter pgScheduleQueryParameter);
 
     /*
      * 尚未使用
@@ -50,6 +51,5 @@ public interface PetGroomerScheduleDao {
      * User預約時取得該筆需要修改的一筆班表。
      */
     public  PetGroomerSchedule getPgScheduleByPgIdAndPgsDate(Integer pgId, Date pgsDate);
-
 
 }

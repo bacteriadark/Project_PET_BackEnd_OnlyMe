@@ -94,6 +94,25 @@ public class PortfolioDaoImp implements PortfolioDao {
     }
 
     @Override
+    public Portfolio findLastestPortfolio() {
+        String sql = "select POR_ID, PG_ID, POR_TITLE, POR_TEXT, POR_UPLOAD from PORTFOLIO order by POR_ID desc limit 1";
+        Map<String, Object> map = new HashMap<>();
+        List<Portfolio> list = namedParameterJdbcTemplate.query(sql, map, new RowMapper<Portfolio>() {
+            @Override
+            public Portfolio mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Portfolio rest = new Portfolio();
+                rest.setPorId(rs.getInt("POR_ID"));
+                rest.setPgId(rs.getInt("PG_ID"));
+                rest.setPorTitle(rs.getString("POR_TITLE"));
+                rest.setPorText(rs.getString("POR_TEXT"));
+                rest.setPorUpload(rs.getDate("POR_UPLOAD"));
+                return rest;
+            }
+        });
+        return list.get(0);
+    }
+
+    @Override
     public List<Portfolio> list(PGQueryParameter PGQueryParameter) {
         String sql = "SELECT POR_ID, PG_ID, POR_TITLE, POR_TEXT, POR_UPLOAD FROM PORTFOLIO ";
         Map<String, Object> map = new HashMap<>();
@@ -111,6 +130,25 @@ public class PortfolioDaoImp implements PortfolioDao {
         map.put("limit", PGQueryParameter.getLimit());
         map.put("offset", PGQueryParameter.getOffset());
 
+        List<Portfolio> list = namedParameterJdbcTemplate.query(sql, map, new RowMapper<Portfolio>() {
+            @Override
+            public Portfolio mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Portfolio rest = new Portfolio();
+                rest.setPorId(rs.getInt("POR_ID"));
+                rest.setPgId(rs.getInt("PG_ID"));
+                rest.setPorTitle(rs.getString("POR_TITLE"));
+                rest.setPorText(rs.getString("POR_TEXT"));
+                rest.setPorUpload(rs.getDate("POR_UPLOAD"));
+                return rest;
+            }
+        });
+        return list;
+    }
+
+    @Override
+    public List<Portfolio> listAllPortfolio() {
+        String sql = "SELECT POR_ID, PG_ID, POR_TITLE, POR_TEXT, POR_UPLOAD FROM PORTFOLIO ";
+        Map<String, Object> map = new HashMap<>();
         List<Portfolio> list = namedParameterJdbcTemplate.query(sql, map, new RowMapper<Portfolio>() {
             @Override
             public Portfolio mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -150,3 +188,4 @@ public class PortfolioDaoImp implements PortfolioDao {
     }
 
 }
+

@@ -5,8 +5,8 @@ import project_pet_backEnd.groomer.petgroomer.dto.PGQueryParameter;
 import project_pet_backEnd.groomer.petgroomer.dto.response.PictureInfoRes;
 import project_pet_backEnd.groomer.petgroomer.dto.response.PortfolioCollectRes;
 import project_pet_backEnd.groomer.petgroomercollection.vo.PortfolioCollect;
+import project_pet_backEnd.user.dto.ResultResponse;
 import project_pet_backEnd.utils.commonDto.Page;
-import project_pet_backEnd.utils.commonDto.ResultResponse;
 
 import java.util.List;
 

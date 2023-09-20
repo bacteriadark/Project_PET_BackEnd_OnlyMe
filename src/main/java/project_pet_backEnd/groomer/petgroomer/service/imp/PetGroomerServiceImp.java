@@ -1,41 +1,34 @@
 package project_pet_backEnd.groomer.petgroomer.service.imp;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import project_pet_backEnd.groomer.petgroomer.dao.PortfolioRepository;
 import project_pet_backEnd.groomer.petgroomer.dto.GetAllGroomers;
 import project_pet_backEnd.groomer.petgroomer.dto.PGQueryParameter;
-import project_pet_backEnd.groomer.petgroomer.dto.response.*;
+import project_pet_backEnd.groomer.petgroomer.dto.response.GetAllGroomerListSortResForUser;
+import project_pet_backEnd.groomer.petgroomer.dto.response.ManagerGetByFunctionIdRes;
+import project_pet_backEnd.groomer.petgroomer.dto.response.GetAllGroomerListSortRes;
 import project_pet_backEnd.groomer.petgroomer.vo.PetGroomer;
 import project_pet_backEnd.groomer.petgroomer.dao.PetGroomerDao;
 import project_pet_backEnd.groomer.petgroomer.dto.request.PGInsertReq;
 import project_pet_backEnd.groomer.petgroomer.dto.request.GetAllGroomerListReq;
 import project_pet_backEnd.groomer.petgroomer.service.PetGroomerService;
-import project_pet_backEnd.groomer.petgroomercollection.vo.Portfolio;
-import project_pet_backEnd.userPushNotify.dao.PictureInfoRepository;
-import project_pet_backEnd.userPushNotify.vo.PictureInfo;
-import project_pet_backEnd.utils.commonDto.ResultResponse;
+import project_pet_backEnd.user.dto.ResultResponse;
 import project_pet_backEnd.utils.AllDogCatUtils;
 import project_pet_backEnd.utils.commonDto.Page;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PetGroomerServiceImp implements PetGroomerService {
 
     @Autowired
     PetGroomerDao petGroomerDao;
-
-    @Autowired
-    PortfolioRepository portfolioRepository;
-
-    @Autowired
-    PictureInfoRepository pictureInfoRepository;
 
     /**
      * 獲取擁有美容師個人管理權限的管理員列表，供新增美容師使用。 for 管理員
@@ -45,8 +38,8 @@ public class PetGroomerServiceImp implements PetGroomerService {
      * @throws ResponseStatusException 如果找不到擁有美容師個人管理權限之管理員，將拋出此異常
      */
     @Override
-    public ResultResponse<List<ManagerGetByFunctionIdRes>> getManagerByFunctionId(Integer functionId) {
-        ResultResponse<List<ManagerGetByFunctionIdRes>> rs = new ResultResponse<>();
+    public ResultResponse getManagerByFunctionId(Integer functionId) {
+        ResultResponse rs = new ResultResponse();
         List<ManagerGetByFunctionIdRes> managerGetByFunctionIdResList = petGroomerDao.getManagerByFunctionId(functionId);
         if (managerGetByFunctionIdResList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "未找到擁有美容師個人管理權限之管理員，請至權限管理新增擁有美容師個人管理權限之管理員");
@@ -63,7 +56,7 @@ public class PetGroomerServiceImp implements PetGroomerService {
      * @throws ResponseStatusException 如果新增失敗，將拋出此異常
      */
     @Override
-    public ResultResponse<String> insertGroomer(PGInsertReq pgInsertReq) {
+    public ResultResponse insertGroomer(PGInsertReq pgInsertReq) {
 
         List<PetGroomer> allGroomer = petGroomerDao.getAllGroomer();
         for (PetGroomer existingGroomer : allGroomer) {
@@ -77,17 +70,17 @@ public class PetGroomerServiceImp implements PetGroomerService {
         }else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "新增失敗，請提供管理員ID");
         }
-        if(!pgInsertReq.getPgName().isBlank())
+        if(!StringUtils.isBlank(pgInsertReq.getPgName()))
             petGroomer.setPgName(pgInsertReq.getPgName());
         if(pgInsertReq.getPgGender()!=null)
             petGroomer.setPgGender(pgInsertReq.getPgGender());
         if(pgInsertReq.getPgPic()!=null)
             petGroomer.setPgPic(pgInsertReq.getPgPic());
-        if(!pgInsertReq.getPgEmail().isBlank())
+        if(!StringUtils.isBlank(pgInsertReq.getPgEmail()))
             petGroomer.setPgEmail(pgInsertReq.getPgEmail());
-        if(!pgInsertReq.getPgPh().isBlank())
+        if(!StringUtils.isBlank(pgInsertReq.getPgPh()))
             petGroomer.setPgPh(pgInsertReq.getPgPh());
-        if(!pgInsertReq.getPgAddress().isBlank())
+        if(!StringUtils.isBlank(pgInsertReq.getPgAddress()))
             petGroomer.setPgAddress(pgInsertReq.getPgAddress());
         if(pgInsertReq.getPgBirthday()!=null){
             petGroomer.setPgBirthday(pgInsertReq.getPgBirthday());
@@ -95,7 +88,7 @@ public class PetGroomerServiceImp implements PetGroomerService {
 
         try {
             petGroomerDao.insertGroomer(petGroomer);
-            ResultResponse<String> rs = new ResultResponse<>();
+            ResultResponse rs = new ResultResponse();
             rs.setMessage("新增美容師成功");
             return rs;
         } catch (DataAccessException e) {
@@ -125,10 +118,10 @@ public class PetGroomerServiceImp implements PetGroomerService {
             int gender = groomers.getPgGender();
             switch (gender) {
                 case 0:
-                    getAllGroomerListSortRes.setPgGender("女");
+                    getAllGroomerListSortRes.setPgGender("女性");
                     break;
                 case 1:
-                    getAllGroomerListSortRes.setPgGender("男");
+                    getAllGroomerListSortRes.setPgGender("男性");
                     break;
             }
             getAllGroomerListSortRes.setPgPic(AllDogCatUtils.base64Encode(groomers.getPgPic()));
@@ -198,8 +191,8 @@ public class PetGroomerServiceImp implements PetGroomerService {
      * @throws ResponseStatusException 如果找不到指定ID的美容師，將拋出此異常
      */
     @Override
-    public ResultResponse<String> updateGroomerByIdForMan(GetAllGroomerListReq getAllGroomerListReq) {
-        ResultResponse<String> rs = new ResultResponse<>();
+    public ResultResponse updateGroomerByIdForMan(GetAllGroomerListReq getAllGroomerListReq) {
+        ResultResponse rs = new ResultResponse();
         try {
             // 檢查是否存在該美容師
             PetGroomer existingGroomer = petGroomerDao.getPetGroomerByManId(getAllGroomerListReq.getManId());
@@ -221,8 +214,10 @@ public class PetGroomerServiceImp implements PetGroomerService {
             }
 
             // 更新美容師信息
-
-            if (!getAllGroomerListReq.getPgName().isBlank()) {
+            if (getAllGroomerListReq.getPgId() != null) {
+                existingGroomer.setPgId(getAllGroomerListReq.getPgId());
+            }
+            if (!StringUtils.isBlank(getAllGroomerListReq.getPgName())) {
                 existingGroomer.setPgName(getAllGroomerListReq.getPgName());
             }
             if (getAllGroomerListReq.getPgGender() != null) {
@@ -231,13 +226,13 @@ public class PetGroomerServiceImp implements PetGroomerService {
             if (getAllGroomerListReq.getPgPic() != null) {
                 existingGroomer.setPgPic(getAllGroomerListReq.getPgPic());
             }
-            if (!getAllGroomerListReq.getPgEmail().isBlank()) {
+            if (!StringUtils.isBlank(getAllGroomerListReq.getPgEmail())) {
                 existingGroomer.setPgEmail(getAllGroomerListReq.getPgEmail());
             }
-            if (!getAllGroomerListReq.getPgPh().isBlank()) {
+            if (!StringUtils.isBlank(getAllGroomerListReq.getPgPh())) {
                 existingGroomer.setPgPh(getAllGroomerListReq.getPgPh());
             }
-            if (!getAllGroomerListReq.getPgAddress().isBlank()) {
+            if (!StringUtils.isBlank(getAllGroomerListReq.getPgAddress())) {
                 existingGroomer.setPgAddress(getAllGroomerListReq.getPgAddress());
             }
             if (getAllGroomerListReq.getPgBirthday() != null) {
@@ -251,81 +246,6 @@ public class PetGroomerServiceImp implements PetGroomerService {
             // 出現異常，可以拋出異常或返回錯誤提示信息
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "更新美容師信息失敗，請稍後重試", e);
         }
-    }
-
-    @Override
-    public ResultResponse<GetAllGroomerListSortRes> getPgInfoByManIdForPg(Integer manId) {
-        GetAllGroomers groomer = petGroomerDao.getGroomerByManId(manId);
-        if(groomer == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "您尚未被新增為美容師。請通知管理員新增。");
-
-        GetAllGroomerListSortRes resPg = new GetAllGroomerListSortRes();
-        resPg.setPgId(groomer.getPgId());
-        resPg.setManId(groomer.getManId());
-        resPg.setPgName(groomer.getPgName());
-        switch (groomer.getPgGender()) {
-            case 0 -> resPg.setPgGender("女");
-            case 1 -> resPg.setPgGender("男");
-        }
-        resPg.setPgPic(AllDogCatUtils.base64Encode(groomer.getPgPic()));
-        resPg.setPgEmail(groomer.getPgEmail());
-        resPg.setPgPh(groomer.getPgPh());
-        resPg.setPgAddress(groomer.getPgAddress());
-        resPg.setPgBirthday(AllDogCatUtils.timestampToSqlDateFormat(groomer.getPgBirthday()));
-        resPg.setNumAppointments(groomer.getNumAppointments());
-        ResultResponse<GetAllGroomerListSortRes> resultResponse = new ResultResponse<>();
-        resultResponse.setMessage(resPg);
-        return resultResponse;
-    }
-
-    //查詢作品集ByPgId
-    @Override
-    public ResultResponse<List<PortfolioRes>> getPortfolioByPgId(Integer pgId) {
-
-        List<Portfolio> portfolioList = portfolioRepository.findByPgId(pgId);
-
-        if(portfolioList==null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"此美容師尚未上傳任何作品集");
-
-        List<PortfolioRes> resList = portfolioList.stream().map(portfolio -> {
-            PortfolioRes portfolioRes = new PortfolioRes();
-            portfolioRes.setPorId(portfolio.getPorId());
-            portfolioRes.setPgId(portfolio.getPgId());
-            portfolioRes.setPorTitle(portfolio.getPorTitle());
-            portfolioRes.setPorText(portfolio.getPorText());
-            portfolioRes.setPorUpload(AllDogCatUtils.timestampToSqlDateFormat(portfolio.getPorUpload()));
-
-            return portfolioRes;
-        }).toList();
-
-        ResultResponse<List<PortfolioRes>> rs = new ResultResponse<>();
-        rs.setMessage(resList);
-
-        return rs;
-    }
-
-    @Override
-    public ResultResponse<List<PictureInfoRes>> getPicByPorId(Integer porId) {
-        //pictureInfoRepository
-        List<PictureInfo> PicVoList = pictureInfoRepository.findByPorId(porId);
-
-        if(PicVoList==null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"此作品集尚未上傳任何照片!");
-
-        List<PictureInfoRes> resList = PicVoList.stream().map(picVo -> {
-            PictureInfoRes pictureInfoRes = new PictureInfoRes();
-            pictureInfoRes.setPiNo(picVo.getPiNo());
-            pictureInfoRes.setPorId(picVo.getPorId());
-            pictureInfoRes.setPiPicture(AllDogCatUtils.base64Encode(picVo.getPiPicture()));
-            pictureInfoRes.setPiDate(AllDogCatUtils.timestampToDateFormat(picVo.getPiDate()));
-
-            return pictureInfoRes;
-        }).toList();
-
-        ResultResponse<List<PictureInfoRes>> rs = new ResultResponse<>();
-        rs.setMessage(resList);
-
-        return rs;
     }
 }
 
